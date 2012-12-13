@@ -27,7 +27,7 @@ public class DynamicTranslatorResolverImplTest extends TestCase {
 		BRMProduct brmProduct = new BRMProduct();
 		SGAProduct sgaProduct = new SGAProduct();
 		
-		ContextTranslation translation = new ContextTranslation(brmProduct, sgaProduct);
+		ContextTranslation translation = ContextTranslation.from(brmProduct).to(sgaProduct).build();
 		Set<DynamicTranslator> translators =  resolver.resolve(translation);
 		assertTrue(translators.size()==2);
 	}

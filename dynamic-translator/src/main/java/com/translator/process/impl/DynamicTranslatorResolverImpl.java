@@ -10,12 +10,15 @@ import com.translator.process.DynamicTranslatorResolver;
 
 public class DynamicTranslatorResolverImpl implements DynamicTranslatorResolver{
 	
+
 	private DynamicTranslatorLoader loader = new SimpleDynamicTranslatorLoader();
+	private static final String ENVIRONMENT = "SIMULADOR";
 
 	public Set<DynamicTranslator> resolve(ContextTranslation contextTranslation) {
 		Set<DynamicTranslator> translators = loader.loadAllTranslators();
 		Set<DynamicTranslator> result = filterTranslatorsFrom(contextTranslation.getOriginalObject(), translators);
 		result = filterTranslatorsTo(contextTranslation.getTranslatedObject(), result);
+		result = filterTranslatorsByEnvironment(ENVIRONMENT, result);
 		return result;
 	}
 	
@@ -33,6 +36,17 @@ public class DynamicTranslatorResolverImpl implements DynamicTranslatorResolver{
 		Set<DynamicTranslator> result = new HashSet<DynamicTranslator>();
 		for (DynamicTranslator dynamicTranslator : translators) {
 			if(dynamicTranslator.isTranslatorTo(object)){
+				result.add(dynamicTranslator);
+			}
+		}
+		return result;
+	}
+	
+	
+	private Set<DynamicTranslator> filterTranslatorsByEnvironment(String environment, Set<DynamicTranslator> translators){
+		Set<DynamicTranslator> result = new HashSet<DynamicTranslator>();
+		for (DynamicTranslator dynamicTranslator : translators) {
+			if(dynamicTranslator.isEnvironment(environment)){
 				result.add(dynamicTranslator);
 			}
 		}
